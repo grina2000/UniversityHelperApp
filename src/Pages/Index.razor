@@ -1,5 +1,14 @@
 ﻿@page "/"
 
+@using Firebase.Auth;
+@using Google.Cloud.Firestore;
+@using Google.Cloud.Firestore.V1;
+@using UniversityHelperApp.FireBase;
+@using UniversityHelperApp.Models;
+
+
+@inject HttpClient Http
+
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world this is an update!</h1>
@@ -7,3 +16,51 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+
+@code {
+    private FirebaseAuthProvider _authProvider;
+    private Models.User _user;
+    private FirestoreDb _db;
+    private const string APIKEY = "AIzaSyC8yGG-yziPsuRoIqr8xmX0vWbUpCNS0pU\r\n";
+    List<Module> _modules = new List<Module>();
+    private int _currentYear = 1;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        FirebaseProvider p = new FirebaseProvider();
+        await p.SignIn();
+    }
+
+    protected  async Task OnInitializedAsync()
+    {
+        try
+        {
+
+            string s = await Http.GetStringAsync("wwwroot\\Resources\\unihelper-c9895-firebase-adminsdk-nda28-2e84df4a21.json");
+            //  FirebaseAuthLink firebaseAuthLink = await _authProvider.SignInWithEmailAndPasswordAsync(email, password);
+            var builder = new FirestoreClientBuilder { JsonCredentials = s };
+
+            System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "unihelper-c9895-firebase-adminsdk-nda28-2e84df4a21.json");
+
+
+            _db = await FirestoreDb.CreateAsync("unihelper-c9895", builder.Build());
+
+
+            _modules = await FireBaseHandlerServices<Models.Module>.GetAllDocuments(FirebaseProvider.Combine(
+              "Users",
+              "LU73PFYQIjUdsK86F1H4Sq6c9e53",
+              "Years",
+              _currentYear.ToString(),
+              "Modules"),
+              _db);
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
+
+
+}
