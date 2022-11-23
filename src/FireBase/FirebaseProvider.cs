@@ -57,7 +57,10 @@ namespace UniversityHelperApp.FireBase
              "1",
              "Modules"),
              _db);
-
+                foreach(Module module in _modules)
+                {
+                    Console.WriteLine(module.Name);
+                }
 
                 // string s = await Http.GetStringAsync("Resources/unihelper-c9895-firebase-adminsdk-nda28-2e84df4a21.json");
 
