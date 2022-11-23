@@ -44,7 +44,7 @@ Welcome to your new app.
             System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "unihelper-c9895-firebase-adminsdk-nda28-2e84df4a21.json");
 
 
-            _db = await FirestoreDb.CreateAsync("unihelper-c9895", builder.Build());
+            //_db = await FirestoreDb.CreateAsync("unihelper-c9895", builder.Build());
 
 
             _modules = await FireBaseHandlerServices<Models.Module>.GetAllDocuments(FirebaseProvider.Combine(
